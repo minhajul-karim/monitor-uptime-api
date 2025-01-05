@@ -1,0 +1,53 @@
+# Node.js dependencies
+node_modules/
+
+# pnpm-specific files
+.pnpm-store/
+
+# Output directories
+dist/
+build/
+
+# TypeScript temporary files
+*.tsbuildinfo
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor and IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs and Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+debug.log
+
+# Testing
+coverage/
+*.lcov
+
+# Cache
+.cache/
+.next/
+out/
+
+# Miscellaneous
+*.bak
+*.tmp
+*.lock
+*.gz
+*.zip
+*.tar
