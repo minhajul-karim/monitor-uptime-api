@@ -1,5 +1,10 @@
+import { RequestProps } from '../../helpers/handleReqRes';
+
 export const notFoundHandler: any = {};
 
-notFoundHandler.handleReqRes = (reqProps: any, callback: any) => {
-  callback(404, {message: "Not found!"});
+notFoundHandler.handleReqRes = (
+  reqProps: RequestProps,
+  callback: (statusCode: number, response: { message: string }) => void,
+) => {
+  callback(404, { message: 'Not found!' });
 };
