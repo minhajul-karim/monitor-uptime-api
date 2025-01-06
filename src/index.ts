@@ -1,5 +1,5 @@
 import * as http from 'http';
-const { handleReqRes } = require('../helpers/handleReqRes');
+import { handler } from './helpers/handleReqRes';
 
 // Define the App interface
 interface App {
@@ -19,6 +19,6 @@ app.createServer = function () {
   });
 };
 
-app.handleReqRes = handleReqRes;
+app.handleReqRes = handler.handleReqRes;
 
 app.createServer();

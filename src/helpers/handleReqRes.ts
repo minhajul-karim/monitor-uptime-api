@@ -1,11 +1,20 @@
 import { StringDecoder } from 'string_decoder';
 import { IncomingMessage, ServerResponse } from 'http';
+import { routes } from '../routes';
 
 interface Handler {
   handleReqRes: (req: IncomingMessage, res: ServerResponse) => void;
 }
 
-const handler = {} as Handler;
+export interface RequestProps {
+  method: string;
+  pathname: string;
+  id: string;
+  token: string;
+  payload: string;
+}
+
+export const handler = {} as Handler;
 
 handler.handleReqRes = function (req, res) {
   const baseUrl = `http://${req.headers.host}`;
@@ -42,16 +51,25 @@ handler.handleReqRes = function (req, res) {
 
   req.on('end', () => {
     payload += decoder.end();
-    res.end(
-      JSON.stringify({
-        method: req.method,
-        pathname: trimmedPathName,
-        id,
-        token,
-        payload,
-      }),
+    const requestProps = {
+      method: req.method,
+      pathname: trimmedPathName,
+      id,
+      token,
+      payload,
+    };
+
+    const chosenRoute =
+      routes[trimmedPathName as keyof typeof routes] ?? routes['notFound'];
+
+    chosenRoute(
+      requestProps,
+      (statusCode: number, response: { message: string }) => {
+        res.writeHead(statusCode);
+        res.end(JSON.stringify(response));
+      },
     );
   });
 };
 
-module.exports = handler;
+// module.exports = handler;
