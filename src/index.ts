@@ -1,9 +1,24 @@
-import * as http from "http";
+import * as http from 'http';
+import { handler } from './helpers/handleReqRes';
 
-const server = http.createServer((req, res) => {
-  res.end('Hello world!');
-});
+// Define the App interface
+interface App {
+  port: number;
+  createServer: () => void;
+  handleReqRes: (req: http.IncomingMessage, res: http.ServerResponse) => void;
+}
 
-server.listen('3000', () => {
-  console.log('Listening at port 3000');
-});
+const app: App = {} as App;
+
+app.port = 3000;
+
+app.createServer = function () {
+  const server = http.createServer(app.handleReqRes);
+  server.listen(app.port, () => {
+    console.log(`Listening at port ${app.port}`);
+  });
+};
+
+app.handleReqRes = handler.handleReqRes;
+
+app.createServer();
