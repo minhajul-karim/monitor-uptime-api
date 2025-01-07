@@ -6,14 +6,6 @@ interface Handler {
   handleReqRes: (req: IncomingMessage, res: ServerResponse) => void;
 }
 
-export interface RequestProps {
-  method: string;
-  pathname: string;
-  id: string;
-  token: string;
-  payload: string;
-}
-
 export const handler = {} as Handler;
 
 handler.handleReqRes = function (req, res) {
@@ -52,7 +44,7 @@ handler.handleReqRes = function (req, res) {
   req.on('end', () => {
     payload += decoder.end();
     const requestProps = {
-      method: req.method,
+      method: req.method?.toLowerCase(),
       pathname: trimmedPathName,
       id,
       token,
