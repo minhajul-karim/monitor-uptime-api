@@ -2,20 +2,21 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 
 interface Lib {
-  create: (fileName: string, content: string) => void;
-  update: (fileName: string, content: string) => void;
-  read: (fileName: string) => void;
-  delete: (fileName: string) => void;
+  create: (folderName: string, fileName: string, content: string) => void;
+  update: (folderName: string, fileName: string, content: string) => void;
+  read: (folderName: string, fileName: string) => void;
+  delete: (folderName: string, fileName: string) => void;
 }
 
 const lib = {} as Lib;
 
-const filePath = path.join(__dirname, '../../.data/contents');
+const filePath = path.join(__dirname, '../../.data');
 const EXTENSION = '.txt';
 
-lib.create = async (fileName, content) => {
+lib.create = async (folderName, fileName, content) => {
   const newFileName = `${fileName}${EXTENSION}`;
-  const newFilePath = `${filePath}/${newFileName}`;
+  const newFilePath = `${filePath}/${folderName}/${newFileName}`;
+  console.log("newFilePath", newFilePath);
   try {
     await fs.writeFile(newFilePath, content, { flag: 'wx' });
     console.log(`${fileName}${EXTENSION} has been created!`);
@@ -24,9 +25,9 @@ lib.create = async (fileName, content) => {
   }
 };
 
-lib.read = async (fileName) => {
+lib.read = async (folderName, fileName) => {
   const fileNameToRead = `${fileName}${EXTENSION}`;
-  const filePathToRead = `${filePath}/${fileNameToRead}`;
+  const filePathToRead = `${filePath}/${folderName}/${fileNameToRead}`;
   try {
     const data = await fs.readFile(filePathToRead, { encoding: 'utf8' });
     console.log(data);
@@ -35,9 +36,9 @@ lib.read = async (fileName) => {
   }
 };
 
-lib.update = async (fileName, content) => {
+lib.update = async (folderName, fileName, content) => {
   const fileNameToUpdate = `${fileName}${EXTENSION}`;
-  const filePathToUpdate = `${filePath}/${fileNameToUpdate}`;
+  const filePathToUpdate = `${filePath}/${folderName}/${fileNameToUpdate}`;
   try {
     await fs.appendFile(filePathToUpdate, content);
     console.log(`${fileName}${EXTENSION} has been updated!`);
@@ -46,9 +47,9 @@ lib.update = async (fileName, content) => {
   }
 };
 
-lib.delete = async (fileName) => {
+lib.delete = async (folderName, fileName) => {
   const fileNameToDelete = `${fileName}${EXTENSION}`;
-  const filePathToDelete = `${filePath}/${fileNameToDelete}`;
+  const filePathToDelete = `${filePath}/${folderName}/${fileNameToDelete}`;
   try {
     await fs.unlink(filePathToDelete);
     console.log(`Deleted ${fileNameToDelete}`);

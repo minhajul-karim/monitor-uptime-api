@@ -23,15 +23,15 @@ app.handleReqRes = handler.handleReqRes;
 app.createServer();
 
 // Create a new file
-lib.create('a', 'Line 1\n');
-lib.create('b', 'Line 1\n');
+lib.create('contents', 'a', 'Line 1\n');
+lib.create('contents', 'b', 'Line 1\n');
 
 // Update a file
-lib.update('b', 'Line 2\n');
-lib.update('b', 'Line 3\n');
+lib.update('contents', 'b', 'Line 2\n');
+lib.update('contents', 'b', 'Line 3\n');
 
 // Read a file
-lib.read('b');
+lib.read('contents', 'b');
 
 // Delete a file
-lib.delete('b');
+lib.delete('contents', 'b');
