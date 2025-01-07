@@ -1,21 +1,19 @@
 import * as http from 'http';
 import { handler } from './helpers/handleReqRes';
+import { environmentToExport as environment } from './helpers/environments';
 
 // Define the App interface
 interface App {
-  port: number;
   createServer: () => void;
   handleReqRes: (req: http.IncomingMessage, res: http.ServerResponse) => void;
 }
 
 const app: App = {} as App;
 
-app.port = 3000;
-
 app.createServer = function () {
   const server = http.createServer(app.handleReqRes);
-  server.listen(app.port, () => {
-    console.log(`Listening at port ${app.port}`);
+  server.listen(environment.port, () => {
+    console.log(`Listening at port ${environment.port}`);
   });
 };
 
