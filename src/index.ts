@@ -23,6 +23,7 @@ app.handleReqRes = handler.handleReqRes;
 app.createServer();
 
 // Create a new file
+lib.create('a', 'Line 1\n');
 lib.create('b', 'Line 1\n');
 
 // Update a file

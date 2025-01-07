@@ -10,7 +10,7 @@ interface Lib {
 
 const lib = {} as Lib;
 
-const filePath = path.join(__dirname, '../../.data');
+const filePath = path.join(__dirname, '../../.data/contents');
 const EXTENSION = '.txt';
 
 lib.create = async (fileName, content) => {
