@@ -23,7 +23,11 @@ app.handleReqRes = handler.handleReqRes;
 app.createServer();
 
 // Create a new file
-lib.create('b', 'A file content');
+lib.create('b', 'Line 1\n');
+
+// Update a file
+lib.update('b', 'Line 2\n');
+lib.update('b', 'Line 3\n');
 
 // Read a file
 lib.read('b');
