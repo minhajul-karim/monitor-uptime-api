@@ -31,3 +31,6 @@ lib.update('b', 'Line 3\n');
 
 // Read a file
 lib.read('b');
+
+// Delete a file
+lib.delete('b');
