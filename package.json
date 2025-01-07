@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only --no-notify src/index.ts",
+    "development": "NODE_ENV=development ts-node-dev --respawn --transpile-only --no-notify src/index.ts",
+    "staging": "NODE_ENV=staging ts-node-dev --respawn --transpile-only --no-notify src/index.ts",
+    "production": "NODE_ENV=production ts-node-dev --respawn --transpile-only --no-notify src/index.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write ."
