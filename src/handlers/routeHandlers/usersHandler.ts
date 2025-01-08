@@ -1,26 +1,6 @@
 import utils from '../../helpers/utils';
 import lib from '../../lib/data';
-
-interface RequestProps {
-  method: string;
-  pathname: string;
-  id: string;
-  token: string;
-  payload: string;
-}
-
-type HandleReqRes = (
-  reqProps: RequestProps,
-  callback: (statusCode: number, response: { message: string }) => void,
-) => void;
-
-interface UserHandler {
-  handleReqRes: HandleReqRes;
-  get: HandleReqRes;
-  post: HandleReqRes;
-  put: HandleReqRes;
-  delete: HandleReqRes;
-}
+import { UserHandler } from '../../helpers/types';
 
 export const usersHandler = {} as UserHandler;
 const ACCEPTED_METHODS = ['get', 'post', 'put', 'delete'];
@@ -34,8 +14,19 @@ usersHandler.handleReqRes = (reqProps, callback) => {
   }
 };
 
-usersHandler.get = (reqProps, callback) => {
-  callback(200, { message: 'Users list' });
+usersHandler.get = async (reqProps, callback) => {
+  const validatedPhone = utils.validateString(reqProps.phone, 11);
+  if (!validatedPhone) {
+    callback(400, { message: 'Bad request' });
+    return;
+  }
+  try {
+    const userString = await lib.read('users', reqProps.phone);
+    const userJson = utils.parseJson(userString);
+    callback(200, { user: userJson });
+  } catch (error) {
+    callback(400, { message: 'Something went wrong. Could not find user' });
+  }
 };
 
 usersHandler.post = async (reqProps, callback) => {
