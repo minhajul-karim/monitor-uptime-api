@@ -32,6 +32,3 @@ lib.update('contents', 'b', 'Line 3\n');
 
 // Read a file
 lib.read('contents', 'b');
-
-// Delete a file
-lib.delete('contents', 'b');

@@ -52,6 +52,17 @@ usersHandler.put = (reqProps, callback) => {
   callback(200, { message: 'Put user' });
 };
 
-usersHandler.delete = (reqProps, callback) => {
-  callback(200, { message: 'Delete user' });
+usersHandler.delete = async (reqProps, callback) => {
+  const validatedPhone = utils.validateString(reqProps.phone, 11);
+  if (!validatedPhone) {
+    callback(400, { message: 'Bad request' });
+    return;
+  }
+
+  try {
+    await lib.delete('users', reqProps.phone);
+    callback(200, { message: 'User deleted' });
+  } catch (error) {
+    callback(400, { message: 'Something went wrong. Could not delete user' });
+  }
 };

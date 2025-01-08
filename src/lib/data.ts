@@ -56,6 +56,7 @@ lib.delete = async (folderName, fileName) => {
     console.log(`Deleted ${fileNameToDelete}`);
   } catch (error) {
     console.error(`Could not delete ${fileNameToDelete}`);
+    throw error;
   }
 };
 
