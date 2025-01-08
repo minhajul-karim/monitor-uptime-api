@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 
 interface Lib {
-  create: (folderName: string, fileName: string, content: string) => void;
+  create: (folderName: string, fileName: string, content: string) => Promise<boolean>;
   update: (folderName: string, fileName: string, content: string) => void;
   read: (folderName: string, fileName: string) => void;
   delete: (folderName: string, fileName: string) => void;
@@ -16,12 +16,13 @@ const EXTENSION = '.txt';
 lib.create = async (folderName, fileName, content) => {
   const newFileName = `${fileName}${EXTENSION}`;
   const newFilePath = `${filePath}/${folderName}/${newFileName}`;
-  console.log("newFilePath", newFilePath);
   try {
     await fs.writeFile(newFilePath, content, { flag: 'wx' });
     console.log(`${fileName}${EXTENSION} has been created!`);
+    return true;
   } catch (error) {
     console.error(`Could not create the file ${newFileName}`);
+    return false;
   }
 };
 

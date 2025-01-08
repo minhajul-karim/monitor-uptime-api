@@ -57,8 +57,10 @@ handler.handleReqRes = function (req, res) {
     chosenRoute(
       requestProps,
       (statusCode: number, response: { message: string }) => {
-        res.writeHead(statusCode, { 'content-type': 'application/json' });
-        res.end(JSON.stringify(response));
+        if (!res.headersSent) {
+          res.writeHead(statusCode, { 'content-type': 'application/json' });
+          res.end(JSON.stringify(response));
+        }
       },
     );
   });
