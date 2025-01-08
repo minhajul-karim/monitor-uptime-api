@@ -70,3 +70,22 @@ GET http://localhost:3000/users?phone=01711091061
     }
 }
 ```
+### Delete User
+#### Request
+```
+DELETE http://localhost:3000/users?phone=01711091061
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. Could not delete user"
+}
+```
+**Or**
+`Status: 200 OK`
+```
+{
+    "message": "User deleted"
+}
+```
