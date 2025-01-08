@@ -24,7 +24,7 @@ Please follow the below instructions to run this project in your machine:
 ### Create User
 #### Request
 ```
-GET http://localhost:3000/users
+POST http://localhost:3000/users
 ```
 #### Payload
 ```
@@ -42,5 +42,31 @@ GET http://localhost:3000/users
 ```
 {
     "message": "User created"
+}
+```
+
+### Read User
+#### Request
+```
+GET http://localhost:3000/users?phone=01711091061
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. Could not find user"
+}
+```
+**Or**
+`Status: 200 OK`
+```
+{
+    "user": {
+        "firstName": "Mr",
+        "lastName": "Karim",
+        "phone": "01711091062",
+        "password": "7571408e70935dbc6a828cb6369572e1",
+        "tosAgreement": false
+    }
 }
 ```
