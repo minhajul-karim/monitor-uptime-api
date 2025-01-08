@@ -19,3 +19,28 @@ Please follow the below instructions to run this project in your machine:
    pnpm run dev
    ```
 3. Your app should be available in http://localhost:3000
+
+## REST API to CRUD users
+### Create User
+#### Request
+```
+GET http://localhost:3000/users
+```
+#### Payload
+```
+{"firstName": "Mr", "lastName": "Karim", "phone": "01711091062", "password": "12345", "tosAgreement": false }
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. The user may already exist"
+}
+```
+**Or**
+`Status: 201 Created`
+```
+{
+    "message": "User created"
+}
+```
