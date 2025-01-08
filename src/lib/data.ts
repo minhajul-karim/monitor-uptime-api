@@ -4,7 +4,7 @@ import * as path from 'path';
 interface Lib {
   create: (folderName: string, fileName: string, content: string) => Promise<boolean>;
   update: (folderName: string, fileName: string, content: string) => void;
-  read: (folderName: string, fileName: string) => void;
+  read: (folderName: string, fileName: string) => Promise<string>;
   delete: (folderName: string, fileName: string) => void;
 }
 
@@ -31,9 +31,9 @@ lib.read = async (folderName, fileName) => {
   const filePathToRead = `${filePath}/${folderName}/${fileNameToRead}`;
   try {
     const data = await fs.readFile(filePathToRead, { encoding: 'utf8' });
-    console.log(data);
+    return data;
   } catch (error) {
-    console.error(`Could not read the file ${fileNameToRead}`);
+    throw error;
   }
 };
 
