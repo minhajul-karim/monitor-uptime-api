@@ -34,7 +34,7 @@ export interface UserHandler {
 
 export interface Utils {
   parseJson: (stringJson: string) => User;
-  validateJson: (jsonObject: User) => boolean;
+  validateUserPayloadJson: (jsonObject: User) => boolean;
   validateString: (
     stringToValidate: string | undefined,
     lenOfString: number,

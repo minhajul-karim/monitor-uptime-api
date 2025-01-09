@@ -31,7 +31,7 @@ usersHandler.get = async (reqProps, callback) => {
 
 usersHandler.post = async (reqProps, callback) => {
   const payloadJson = utils.parseJson(reqProps.payload);
-  const validatedPayloadJson = utils.validateJson(payloadJson);
+  const validatedPayloadJson = utils.validateUserPayloadJson(payloadJson);
   if (!validatedPayloadJson) {
     callback(400, { message: 'Bad request' });
     return;
@@ -51,7 +51,7 @@ usersHandler.post = async (reqProps, callback) => {
 
 usersHandler.put = async (reqProps, callback) => {
   const payloadJson = utils.parseJson(reqProps.payload);
-  const validatedPayloadJson = utils.validateJson(payloadJson);
+  const validatedPayloadJson = utils.validateUserPayloadJson(payloadJson);
   if (!validatedPayloadJson) {
     callback(400, { message: 'Bad request' });
     return;

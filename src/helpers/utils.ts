@@ -12,7 +12,7 @@ utils.parseJson = (stringJson) => {
   }
 };
 
-utils.validateJson = (jsonObject) => {
+utils.validateUserPayloadJson = (jsonObject) => {
   if (typeof jsonObject !== 'object') {
     return false;
   }
