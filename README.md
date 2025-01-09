@@ -3,6 +3,10 @@
 ## Table of Contents
 
 - [How to run](#how-to-run)
+- [Create User](#create-user)
+- [Read User](#read-user)
+- [Update User](#update-user)
+- [Delete User](#delete-user)
 
 <!-- HOW TO RUN -->
 
@@ -68,6 +72,29 @@ GET http://localhost:3000/users?phone=01711091061
         "password": "7571408e70935dbc6a828cb6369572e1",
         "tosAgreement": false
     }
+}
+```
+### Update User
+#### Request
+```
+PUT http://localhost:3000/users
+```
+#### Payload
+```
+{"firstName": "Muaz", "lastName": "Abdullah", "phone": "01711091062", "password": "abcdefg", "tosAgreement": true }
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. Could not update the user"
+}
+```
+**Or**
+`Status: 200 OK`
+```
+{
+    "message": "User updated"
 }
 ```
 ### Delete User
