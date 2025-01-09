@@ -24,11 +24,10 @@ app.createServer();
 
 // Create a new file
 lib.create('contents', 'a', 'Line 1\n');
-lib.create('contents', 'b', 'Line 1\n');
 
 // Update a file
-lib.update('contents', 'b', 'Line 2\n');
-lib.update('contents', 'b', 'Line 3\n');
+lib.update('contents', 'a', 'Line 2\n');
+lib.update('contents', 'a', 'Line 3\n');
 
 // Read a file
-lib.read('contents', 'b');
+lib.read('contents', 'a');

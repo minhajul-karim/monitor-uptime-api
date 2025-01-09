@@ -34,6 +34,7 @@ usersHandler.post = async (reqProps, callback) => {
   const validatedPayloadJson = utils.validateJson(payloadJson);
   if (!validatedPayloadJson) {
     callback(400, { message: 'Bad request' });
+    return;
   }
   payloadJson.password = utils.encrypt(payloadJson.password);
   const userCreated = await lib.create(
@@ -48,8 +49,30 @@ usersHandler.post = async (reqProps, callback) => {
       });
 };
 
-usersHandler.put = (reqProps, callback) => {
-  callback(200, { message: 'Put user' });
+usersHandler.put = async (reqProps, callback) => {
+  const payloadJson = utils.parseJson(reqProps.payload);
+  const validatedPayloadJson = utils.validateJson(payloadJson);
+  if (!validatedPayloadJson) {
+    callback(400, { message: 'Bad request' });
+    return;
+  }
+
+  try {
+    // Get the existing user info
+    const userString = await lib.read('users', payloadJson.phone);
+    const userJson = utils.parseJson(userString);
+    // Update user info
+    userJson.firstName = payloadJson.firstName;
+    userJson.lastName = payloadJson.lastName;
+    userJson.password = utils.encrypt(payloadJson.password);
+    userJson.tosAgreement = payloadJson.tosAgreement;
+    await lib.update('users', payloadJson.phone, JSON.stringify(userJson));
+    callback(200, { message: 'User updated' });
+  } catch (error) {
+    callback(400, {
+      message: 'Something went wrong. Could not update the user',
+    });
+  }
 };
 
 usersHandler.delete = async (reqProps, callback) => {

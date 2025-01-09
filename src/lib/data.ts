@@ -41,6 +41,8 @@ lib.update = async (folderName, fileName, content) => {
   const fileNameToUpdate = `${fileName}${EXTENSION}`;
   const filePathToUpdate = `${filePath}/${folderName}/${fileNameToUpdate}`;
   try {
+    // Check if file exists before update
+    await fs.access(filePathToUpdate);
     await fs.writeFile(filePathToUpdate, content);
     console.log(`${fileName}${EXTENSION} has been updated!`);
   } catch (error) {
