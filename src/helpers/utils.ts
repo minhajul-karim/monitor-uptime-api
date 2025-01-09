@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 import { Utils } from './types';
 
 const utils = {} as Utils;
@@ -35,6 +36,20 @@ utils.validateUserPayloadJson = (jsonObject) => {
   return true;
 };
 
+utils.validateTokenPayloadJson = (jsonObject) => {
+  if (typeof jsonObject !== 'object') {
+    return false;
+  }
+
+  const validatedPhone = utils.validateString(jsonObject.phone, 11);
+  if (!validatedPhone) return false;
+
+  const validatedPassword = utils.validateString(jsonObject.password, 5);
+  if (!validatedPassword) return false;
+
+  return true;
+};
+
 utils.validateString = (stringToValidate, lenOfString) => {
   if (
     typeof stringToValidate !== 'string' ||
@@ -53,16 +68,21 @@ utils.validateBoolean = (booleanToValidate) => {
   return true;
 };
 
-// Secret key and algorithm
-const algorithm = 'aes-256-cbc'; // Encryption algorithm
-const secretKey = crypto.randomBytes(32); // 32 bytes secret key
-const iv = crypto.randomBytes(16); // Initialization vector (IV)
+utils.hashPassword = async (plainPassword) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+  return hashedPassword;
+};
 
-utils.encrypt = (text) => {
-  const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  return encrypted;
+utils.verifyPassword = async (plainPassword, hashedPassword) => {
+  const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
+  return isMatch;
+};
+
+utils.createToken = (length) => {
+  const numberOfBytes = Math.floor(length / 2);
+  const token = crypto.randomBytes(numberOfBytes).toString('hex');
+  return token;
 };
 
 export default utils;
