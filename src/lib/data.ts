@@ -41,10 +41,11 @@ lib.update = async (folderName, fileName, content) => {
   const fileNameToUpdate = `${fileName}${EXTENSION}`;
   const filePathToUpdate = `${filePath}/${folderName}/${fileNameToUpdate}`;
   try {
-    await fs.appendFile(filePathToUpdate, content);
+    await fs.writeFile(filePathToUpdate, content);
     console.log(`${fileName}${EXTENSION} has been updated!`);
   } catch (error) {
     console.error(`Could not update the file ${fileNameToUpdate}`);
+    throw error;
   }
 };
 

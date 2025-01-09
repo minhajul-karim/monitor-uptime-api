@@ -1,20 +1,5 @@
 import crypto from 'crypto';
-
-interface Utils {
-  parseJson: (stringJson: string) => User;
-  validateJson: (jsonObject: User) => boolean;
-  validateString: (stringToValidate: string, lenOfString: number) => boolean;
-  validateBoolean: (booleanToValidate: boolean) => boolean;
-  encrypt: (text: string) => string;
-}
-
-interface User {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  password: string;
-  tosAgreement: boolean;
-}
+import { Utils } from './types';
 
 const utils = {} as Utils;
 

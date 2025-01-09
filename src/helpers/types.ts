@@ -1,4 +1,4 @@
-export interface User {
+interface User {
   firstName: string;
   lastName: string;
   phone: string;
@@ -30,4 +30,15 @@ export interface UserHandler {
   post: HandleReqRes;
   put: HandleReqRes;
   delete: HandleReqRes;
+}
+
+export interface Utils {
+  parseJson: (stringJson: string) => User;
+  validateJson: (jsonObject: User) => boolean;
+  validateString: (
+    stringToValidate: string | undefined,
+    lenOfString: number,
+  ) => boolean;
+  validateBoolean: (booleanToValidate: boolean) => boolean;
+  encrypt: (text: string) => string;
 }
