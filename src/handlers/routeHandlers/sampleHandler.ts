@@ -6,5 +6,5 @@ sampleHandler.handleReqRes = (
   reqProps: RequestProps,
   callback: (statusCode: number, response: { message: string }) => void,
 ) => {
-  callback(201, { message: 'Welcome to sample page' });
+  callback(200, { message: 'Welcome to sample page' });
 };

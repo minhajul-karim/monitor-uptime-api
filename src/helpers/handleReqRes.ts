@@ -1,17 +1,10 @@
 import { StringDecoder } from 'string_decoder';
 import { IncomingMessage, ServerResponse } from 'http';
 import { routes } from '../routes';
+import { UserResponse } from './types';
 
 interface Handler {
   handleReqRes: (req: IncomingMessage, res: ServerResponse) => void;
-}
-
-export interface RequestProps {
-  method: string;
-  pathname: string;
-  id: string;
-  token: string;
-  payload: string;
 }
 
 export const handler = {} as Handler;
@@ -23,7 +16,7 @@ handler.handleReqRes = function (req, res) {
   const trimmedPathName = url.pathname.replace(/^\/|\/$/g, '');
 
   // Extract data from query string
-  const id = url.searchParams.get('id');
+  const phone = url.searchParams.get('phone');
 
   // Extract custom request headers
   const token = req.headers['token'];
@@ -52,9 +45,9 @@ handler.handleReqRes = function (req, res) {
   req.on('end', () => {
     payload += decoder.end();
     const requestProps = {
-      method: req.method,
+      method: req.method?.toLowerCase(),
       pathname: trimmedPathName,
-      id,
+      phone,
       token,
       payload,
     };
@@ -62,13 +55,12 @@ handler.handleReqRes = function (req, res) {
     const chosenRoute =
       routes[trimmedPathName as keyof typeof routes] ?? routes['notFound'];
 
-    chosenRoute(
-      requestProps,
-      (statusCode: number, response: { message: string }) => {
-        res.writeHead(statusCode);
+    chosenRoute(requestProps, (statusCode: number, response: UserResponse) => {
+      if (!res.headersSent) {
+        res.writeHead(statusCode, { 'content-type': 'application/json' });
         res.end(JSON.stringify(response));
-      },
-    );
+      }
+    });
   });
 };
 
