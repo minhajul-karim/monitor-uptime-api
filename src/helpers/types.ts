@@ -53,3 +53,10 @@ export interface Utils {
     hashedPassword: string,
   ) => Promise<boolean>;
 }
+
+export interface Lib {
+  create: (folderName: string, fileName: string, content: string) => void;
+  update: (folderName: string, fileName: string, content: string) => void;
+  read: (folderName: string, fileName: string) => Promise<string>;
+  delete: (folderName: string, fileName: string) => void;
+}

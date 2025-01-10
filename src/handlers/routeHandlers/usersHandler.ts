@@ -36,17 +36,16 @@ usersHandler.post = async (reqProps, callback) => {
     callback(400, { message: 'Bad request' });
     return;
   }
-  payloadJson.password = utils.encrypt(payloadJson.password);
-  const userCreated = await lib.create(
-    'users',
-    payloadJson.phone,
-    JSON.stringify(payloadJson),
-  );
-  userCreated
-    ? callback(201, { message: 'User created' })
-    : callback(400, {
-        message: 'Something went wrong. The user may already exist',
-      });
+  payloadJson.password = await utils.hashPassword(payloadJson.password);
+
+  try {
+    await lib.create('users', payloadJson.phone, JSON.stringify(payloadJson));
+    callback(201, { message: 'User created' });
+  } catch (error) {
+    callback(400, {
+      message: 'Could not create user. The user may already exist',
+    });
+  }
 };
 
 usersHandler.put = async (reqProps, callback) => {
@@ -64,7 +63,7 @@ usersHandler.put = async (reqProps, callback) => {
     // Update user info
     userJson.firstName = payloadJson.firstName;
     userJson.lastName = payloadJson.lastName;
-    userJson.password = utils.encrypt(payloadJson.password);
+    userJson.password = await utils.hashPassword(payloadJson.password);
     userJson.tosAgreement = payloadJson.tosAgreement;
     await lib.update('users', payloadJson.phone, JSON.stringify(userJson));
     callback(200, { message: 'User updated' });

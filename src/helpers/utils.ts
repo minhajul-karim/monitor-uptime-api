@@ -9,6 +9,7 @@ utils.parseJson = (stringJson) => {
     const json = JSON.parse(stringJson);
     return json;
   } catch (error) {
+    console.error(error);
     return {};
   }
 };
