@@ -88,10 +88,15 @@ tokenHandler.put = async (reqProps, callback) => {
   try {
     const tokenString = await lib.read('tokens', payloadJson.id as string);
     const tokenJson = await utils.parseJson(tokenString);
-    if (payloadJson.extend === true) {
-      const expirationOffset = 1 * 60 * 60 * 1000;
-      (tokenJson.expirationTime as number) += expirationOffset;
+    if (payloadJson.extend !== true) {
+      callback(400, {
+        message: 'Bad request. Please check the extend value.',
+      });
+      return;
     }
+
+    const expirationOffset = 1 * 60 * 60 * 1000;
+    (tokenJson.expirationTime as number) += expirationOffset;
 
     // Update token
     await lib.update(
