@@ -1,19 +1,7 @@
-interface User {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  password: string;
-  tosAgreement: boolean;
-}
-
-interface Token {
-  phone: string;
-  password: string;
-}
-
 export interface UserResponse {
   message?: string;
-  user?: User;
+  user?: Record<string, unknown>;
+  token?: Record<string, unknown>;
 }
 
 interface RequestProps {
@@ -38,9 +26,12 @@ export interface UserHandler {
 }
 
 export interface Utils {
-  parseJson: (stringJson: string) => User;
-  validateUserPayloadJson: (jsonObject: User) => boolean;
-  validateTokenPayloadJson: (jsonObject: Token) => boolean;
+  parseJson: (stringJson: string) => Record<string, unknown>;
+  validateUserPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
+  validateTokenPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
+  validateTokenUpdatePayloadJson: (
+    jsonObject: Record<string, unknown>,
+  ) => boolean;
   validateString: (
     stringToValidate: string | undefined,
     lenOfString: number,
