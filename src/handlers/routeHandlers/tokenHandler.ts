@@ -110,4 +110,17 @@ tokenHandler.put = async (reqProps, callback) => {
   }
 };
 
-tokenHandler.delete = async (reqProps, callback) => {};
+tokenHandler.delete = async (reqProps, callback) => {
+  const validatedTokenId = utils.validateTokenId(reqProps.tokenId, 20);
+  if (!validatedTokenId) {
+    callback(400, { message: 'Bad request. Please check the token ID.' });
+    return;
+  }
+
+  try {
+    await lib.delete('tokens', reqProps.tokenId);
+    callback(200, { message: 'Token deleted' });
+  } catch (error) {
+    callback(400, { message: 'Something went wrong. Could not delete token' });
+  }
+};
