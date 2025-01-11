@@ -17,7 +17,7 @@ usersHandler.handleReqRes = (reqProps, callback) => {
 usersHandler.get = async (reqProps, callback) => {
   const validatedPhone = utils.validateString(reqProps.phone, 11);
   if (!validatedPhone) {
-    callback(400, { message: 'Bad request' });
+    callback(400, { message: 'Bad request. Please provide a valid phone number.' });
     return;
   }
   try {

@@ -14,7 +14,23 @@ tokenHandler.handleReqRes = (reqProps, callback) => {
   }
 };
 
-tokenHandler.get = async (reqProps, callback) => {};
+tokenHandler.get = async (reqProps, callback) => {
+  if (typeof reqProps.tokenId !== 'string' || reqProps.tokenId.length !== 20) {
+    callback(400, {
+      message: 'Bad request. Please provide a valid token.',
+    });
+    return;
+  }
+  try {
+    const tokenString = await lib.read('tokens', reqProps.tokenId);
+    const tokenJson = utils.parseJson(tokenString);
+    callback(200, { user: tokenJson });
+  } catch (error) {
+    callback(400, {
+      message: 'Something went wrong. Could not find the token',
+    });
+  }
+};
 
 tokenHandler.post = async (reqProps, callback) => {
   const payloadJson = utils.parseJson(reqProps.payload);
@@ -49,11 +65,12 @@ tokenHandler.post = async (reqProps, callback) => {
     };
 
     // Create token
-    await lib.create('tokens', payloadJson.phone, JSON.stringify(token));
+    await lib.create('tokens', token.id, JSON.stringify(token));
     callback(200, { message: 'Token created' });
   } catch (error) {
     callback(400, {
-      message: 'Something went wrong. The token may already exist',
+      message:
+        'Something went wrong. Please check if the user exists or the token may already exists',
     });
   }
 };

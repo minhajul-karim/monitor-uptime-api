@@ -20,8 +20,8 @@ interface RequestProps {
   method: string;
   pathname: string;
   phone: string;
-  token: string;
   payload: string;
+  tokenId: string;
 }
 
 type HandleReqRes = (
