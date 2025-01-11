@@ -19,19 +19,19 @@ utils.validateUserPayloadJson = (jsonObject) => {
     return false;
   }
 
-  const validatedFirstName = utils.validateString(jsonObject.firstName, 2);
+  const validatedFirstName = utils.validateString(jsonObject.firstName as string, 2);
   if (!validatedFirstName) return false;
 
-  const validatedLastName = utils.validateString(jsonObject.lastName, 2);
+  const validatedLastName = utils.validateString(jsonObject.lastName as string, 2);
   if (!validatedLastName) return false;
 
-  const validatedPhone = utils.validateString(jsonObject.phone, 11);
+  const validatedPhone = utils.validateString(jsonObject.phone as string, 11);
   if (!validatedPhone) return false;
 
-  const validatedPassword = utils.validateString(jsonObject.password, 5);
+  const validatedPassword = utils.validateString(jsonObject.password as string, 5);
   if (!validatedPassword) return false;
 
-  const validatedTosAgreement = utils.validateBoolean(jsonObject.tosAgreement);
+  const validatedTosAgreement = utils.validateBoolean(jsonObject.tosAgreement as boolean);
   if (!validatedTosAgreement) return false;
 
   return true;
@@ -42,11 +42,25 @@ utils.validateTokenPayloadJson = (jsonObject) => {
     return false;
   }
 
-  const validatedPhone = utils.validateString(jsonObject.phone, 11);
+  const validatedPhone = utils.validateString(jsonObject.phone as string, 11);
   if (!validatedPhone) return false;
 
-  const validatedPassword = utils.validateString(jsonObject.password, 5);
+  const validatedPassword = utils.validateString(jsonObject.password as string, 5);
   if (!validatedPassword) return false;
+
+  return true;
+};
+
+utils.validateTokenUpdatePayloadJson = (jsonObject) => {
+  if (typeof jsonObject !== 'object') {
+    return false;
+  }
+
+  const validatedTokenId = utils.validateTokenId(jsonObject.id as string, 20);
+  if (!validatedTokenId) return false;
+
+  const validatedExtend = utils.validateBoolean(jsonObject.extend as boolean);
+  if (!validatedExtend) return false;
 
   return true;
 };
@@ -56,6 +70,17 @@ utils.validateString = (stringToValidate, lenOfString) => {
     typeof stringToValidate !== 'string' ||
     stringToValidate.length === 0 ||
     stringToValidate.length < lenOfString
+  ) {
+    return false;
+  }
+  return true;
+};
+
+utils.validateTokenId = (stringToValidate, lenOfString) => {
+  if (
+    typeof stringToValidate !== 'string' ||
+    stringToValidate.length === 0 ||
+    stringToValidate.length !== lenOfString
   ) {
     return false;
   }

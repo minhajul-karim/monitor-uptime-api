@@ -36,6 +36,10 @@ export interface Utils {
     stringToValidate: string | undefined,
     lenOfString: number,
   ) => boolean;
+  validateTokenId: (
+    stringToValidate: string,
+    lenOfString: number,
+  ) => boolean;
   validateBoolean: (booleanToValidate: boolean) => boolean;
   createToken: (length: number) => string;
   hashPassword: (plainPassword: string) => Promise<string>;

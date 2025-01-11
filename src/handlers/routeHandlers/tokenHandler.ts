@@ -24,7 +24,7 @@ tokenHandler.get = async (reqProps, callback) => {
   try {
     const tokenString = await lib.read('tokens', reqProps.tokenId);
     const tokenJson = utils.parseJson(tokenString);
-    callback(200, { user: tokenJson });
+    callback(200, { token: tokenJson });
   } catch (error) {
     callback(400, {
       message: 'Something went wrong. Could not find the token',
@@ -41,11 +41,11 @@ tokenHandler.post = async (reqProps, callback) => {
   }
 
   try {
-    const userString = await lib.read('users', payloadJson.phone);
+    const userString = await lib.read('users', payloadJson.phone as string);
     const user = utils.parseJson(userString);
     const passwordMatched = await utils.verifyPassword(
-      payloadJson.password,
-      user.password,
+      payloadJson.password as string,
+      user.password as string,
     );
 
     if (!passwordMatched) {
@@ -75,6 +75,34 @@ tokenHandler.post = async (reqProps, callback) => {
   }
 };
 
-tokenHandler.put = async (reqProps, callback) => {};
+tokenHandler.put = async (reqProps, callback) => {
+  const payloadJson = utils.parseJson(reqProps.payload);
+  const validatedPayload = utils.validateTokenUpdatePayloadJson(payloadJson);
+  if (!validatedPayload) {
+    callback(400, {
+      message: 'Bad request. Please provide a valid token id and extend.',
+    });
+    return;
+  }
+
+  try {
+    const tokenString = await lib.read('tokens', payloadJson.id as string);
+    const tokenJson = await utils.parseJson(tokenString);
+    if (payloadJson.extend === true) {
+      const expirationOffset = 1 * 60 * 60 * 1000;
+      (tokenJson.expirationTime as number) += expirationOffset;
+    }
+
+    // Update token
+    await lib.update(
+      'tokens',
+      payloadJson.id as string,
+      JSON.stringify(tokenJson),
+    );
+    callback(200, { message: 'Token updated.' });
+  } catch (error) {
+    callback(400, { message: 'Bad request.' });
+  }
+};
 
 tokenHandler.delete = async (reqProps, callback) => {};
