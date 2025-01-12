@@ -76,6 +76,16 @@ usersHandler.put = async (reqProps, callback) => {
   }
 
   try {
+    const tokenVerified = await utils.verifyToken(
+      reqProps.tokenIdFromReqHeader as string,
+      payloadJson.phone as string,
+    );
+    if (!tokenVerified) {
+      callback(400, {
+        message: 'Bad request. Please provide a valid token.',
+      });
+      return;
+    }
     // Get the existing user info
     const userString = await lib.read('users', payloadJson.phone as string);
     const userJson = utils.parseJson(userString);
@@ -107,6 +117,16 @@ usersHandler.delete = async (reqProps, callback) => {
   }
 
   try {
+    const tokenVerified = await utils.verifyToken(
+      reqProps.tokenIdFromReqHeader as string,
+      reqProps.phone,
+    );
+    if (!tokenVerified) {
+      callback(400, {
+        message: 'Bad request. Please provide a valid token.',
+      });
+      return;
+    }
     await lib.delete('users', reqProps.phone);
     callback(200, { message: 'User deleted' });
   } catch (error) {
