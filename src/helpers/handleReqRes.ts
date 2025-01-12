@@ -19,6 +19,9 @@ handler.handleReqRes = function (req, res) {
   const phone = url.searchParams.get('phone');
   const tokenId = url.searchParams.get('id');
 
+  // Extract data from request header
+  const tokenIdFromReqHeader = req.headers["token"];
+
   // Extract payload from request method 1
   /*
   const buffers: Buffer[] = [];
@@ -45,6 +48,7 @@ handler.handleReqRes = function (req, res) {
     const requestProps = {
       method: req.method?.toLowerCase(),
       pathname: trimmedPathName,
+      tokenIdFromReqHeader,
       phone,
       payload,
       tokenId,

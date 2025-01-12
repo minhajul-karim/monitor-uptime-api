@@ -17,10 +17,23 @@ usersHandler.handleReqRes = (reqProps, callback) => {
 usersHandler.get = async (reqProps, callback) => {
   const validatedPhone = utils.validateString(reqProps.phone, 11);
   if (!validatedPhone) {
-    callback(400, { message: 'Bad request. Please provide a valid phone number.' });
+    callback(400, {
+      message: 'Bad request. Please provide a valid phone number.',
+    });
     return;
   }
+
   try {
+    const tokenVerified = await utils.verifyToken(
+      reqProps.tokenIdFromReqHeader as string,
+      reqProps.phone,
+    );
+    if (!tokenVerified) {
+      callback(400, {
+        message: 'Bad request. Please provide a valid token.',
+      });
+      return;
+    }
     const userString = await lib.read('users', reqProps.phone);
     const userJson = utils.parseJson(userString);
     callback(200, { user: userJson });
@@ -36,10 +49,16 @@ usersHandler.post = async (reqProps, callback) => {
     callback(400, { message: 'Bad request' });
     return;
   }
-  payloadJson.password = await utils.hashPassword(payloadJson.password as string);
+  payloadJson.password = await utils.hashPassword(
+    payloadJson.password as string,
+  );
 
   try {
-    await lib.create('users', payloadJson.phone as string, JSON.stringify(payloadJson));
+    await lib.create(
+      'users',
+      payloadJson.phone as string,
+      JSON.stringify(payloadJson),
+    );
     callback(201, { message: 'User created' });
   } catch (error) {
     callback(400, {
@@ -63,9 +82,15 @@ usersHandler.put = async (reqProps, callback) => {
     // Update user info
     userJson.firstName = payloadJson.firstName;
     userJson.lastName = payloadJson.lastName;
-    userJson.password = await utils.hashPassword(payloadJson.password as string);
+    userJson.password = await utils.hashPassword(
+      payloadJson.password as string,
+    );
     userJson.tosAgreement = payloadJson.tosAgreement;
-    await lib.update('users', payloadJson.phone as string, JSON.stringify(userJson));
+    await lib.update(
+      'users',
+      payloadJson.phone as string,
+      JSON.stringify(userJson),
+    );
     callback(200, { message: 'User updated' });
   } catch (error) {
     callback(400, {
