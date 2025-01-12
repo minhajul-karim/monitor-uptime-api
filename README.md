@@ -116,3 +116,110 @@ DELETE http://localhost:3000/users?phone=01711091061
     "message": "User deleted"
 }
 ```
+## REST API to CRUD tokens
+### Create Token
+#### Request
+```
+POST http://localhost:3000/token
+```
+#### Payload
+```
+{"phone": "01779898372", "password": "12345"}
+```
+#### Response
+`Status: 201 Created`
+```
+{
+    "message": "Token created"
+}
+```
+**Or**
+#### Payload
+```
+{"phone": "0177989837200", "password": "12345"}
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. Please check if the user exists or the token may already exists"
+}
+```
+
+### Read Token
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please provide a valid token."
+}
+```
+**Or**
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb00003
+```
+`Status: 200 OK`
+```
+{
+    "token": {
+        "id": "1ba281e35ce83cb00003",
+        "phone": "01779898372",
+        "expirationTime": 1736657694552
+    }
+}
+```
+### Update Token
+#### Request
+```
+PUT http://localhost:3000/token
+```
+#### Payload
+```
+{"id": "1ba281e35ce83cb", "extend": true}
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please provide a valid token id and extend."
+}
+```
+**Or**
+#### Payload
+```
+{"id": "1ba281e35ce83cb00003", "extend": true}
+```
+`Status: 200 OK`
+```
+{
+    "message": "Token updated."
+}
+```
+### Delete Token
+#### Request
+```
+DELETE http://localhost:3000/token?id=1ba281e35ce83cb
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please check the token ID."
+}
+```
+**Or**
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb00003
+```
+`Status: 200 OK`
+```
+{
+    "message": "Token deleted."
+}
+```

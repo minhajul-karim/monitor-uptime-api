@@ -7,7 +7,7 @@ const ACCEPTED_METHODS = ['get', 'post', 'put', 'delete'];
 
 tokenHandler.handleReqRes = (reqProps, callback) => {
   if (!ACCEPTED_METHODS.includes(reqProps.method)) {
-    callback(405, { message: 'Unsupported method' });
+    callback(405, { message: 'Unsupported method.' });
   } else {
     const method = reqProps.method as keyof UserHandler;
     tokenHandler[method](reqProps, callback);
@@ -27,7 +27,7 @@ tokenHandler.get = async (reqProps, callback) => {
     callback(200, { token: tokenJson });
   } catch (error) {
     callback(400, {
-      message: 'Something went wrong. Could not find the token',
+      message: 'Something went wrong. Could not find the token.',
     });
   }
 };
@@ -36,7 +36,7 @@ tokenHandler.post = async (reqProps, callback) => {
   const payloadJson = utils.parseJson(reqProps.payload);
   const validatedPayloadJson = utils.validateTokenPayloadJson(payloadJson);
   if (!validatedPayloadJson) {
-    callback(400, { message: 'Bad request' });
+    callback(400, { message: 'Bad request.' });
     return;
   }
 
@@ -50,7 +50,7 @@ tokenHandler.post = async (reqProps, callback) => {
 
     if (!passwordMatched) {
       callback(400, {
-        message: 'Bad request. Please provide valid phone & password',
+        message: 'Bad request. Please provide valid phone & password.',
       });
       return;
     }
@@ -66,11 +66,11 @@ tokenHandler.post = async (reqProps, callback) => {
 
     // Create token
     await lib.create('tokens', token.id, JSON.stringify(token));
-    callback(200, { message: 'Token created' });
+    callback(201, { message: 'Token created.' });
   } catch (error) {
     callback(400, {
       message:
-        'Something went wrong. Please check if the user exists or the token may already exists',
+        'Something went wrong. Please check if the user exists or the token may already exists.',
     });
   }
 };
@@ -119,8 +119,8 @@ tokenHandler.delete = async (reqProps, callback) => {
 
   try {
     await lib.delete('tokens', reqProps.tokenId);
-    callback(200, { message: 'Token deleted' });
+    callback(200, { message: 'Token deleted.' });
   } catch (error) {
-    callback(400, { message: 'Something went wrong. Could not delete token' });
+    callback(400, { message: 'Something went wrong. Could not delete token.' });
   }
 };
