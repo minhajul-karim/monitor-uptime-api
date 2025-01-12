@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import lib from '../lib/data';
 import { Utils } from './types';
+import { environmentToExport as environment } from './environments';
 
 const utils = {} as Utils;
 
@@ -45,6 +46,38 @@ utils.validateUserPayloadJson = (jsonObject) => {
     jsonObject.tosAgreement as boolean,
   );
   if (!validatedTosAgreement) return false;
+
+  return true;
+};
+
+utils.validateCheckPayloadJson = (jsonObject) => {
+  if (typeof jsonObject !== 'object') {
+    return false;
+  }
+
+  const validatedProtocol = utils.validateStringInArray(
+    jsonObject.protocol as string,
+    ['http', 'https'],
+  );
+  if (!validatedProtocol) return false;
+
+  const validatedUrl =
+    typeof jsonObject.url === 'string' && jsonObject.url.trim().length > 0;
+  if (!validatedUrl) return false;
+
+  const validatedMethod = utils.validateStringInArray(
+    jsonObject.method as string,
+    ['get', 'post', 'put', 'delete'],
+  );
+  if (!validatedMethod) return false;
+
+  const validatedSuccessCodes = jsonObject.successCodes instanceof Array;
+  if (!validatedSuccessCodes) return false;
+
+  const validatedTimeOutSeconds = utils.validateTimeOutSeconds(
+    jsonObject.timeoutSeconds as number,
+  );
+  if (!validatedTimeOutSeconds) return false;
 
   return true;
 };
@@ -107,6 +140,24 @@ utils.validateBoolean = (booleanToValidate) => {
     return false;
   }
   return true;
+};
+
+utils.validateStringInArray = (str, arr) => {
+  if (typeof str === 'string' && arr.includes(str)) {
+    return true;
+  }
+  return false;
+};
+
+utils.validateTimeOutSeconds = (timeout) => {
+  if (
+    timeout % 1 === 0 &&
+    timeout > 0 &&
+    timeout <= environment.maxCheckTimeoutSeconds
+  ) {
+    return true;
+  }
+  return false;
 };
 
 utils.hashPassword = async (plainPassword) => {
