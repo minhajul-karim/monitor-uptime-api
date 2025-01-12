@@ -1,22 +1,16 @@
-interface User {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  password: string;
-  tosAgreement: boolean;
-}
-
 export interface UserResponse {
   message?: string;
-  user?: User;
+  user?: Record<string, unknown>;
+  token?: Record<string, unknown>;
 }
 
 interface RequestProps {
   method: string;
   pathname: string;
   phone: string;
-  token: string;
   payload: string;
+  tokenId: string;
+  tokenIdFromReqHeader: undefined | string;
 }
 
 type HandleReqRes = (
@@ -33,12 +27,30 @@ export interface UserHandler {
 }
 
 export interface Utils {
-  parseJson: (stringJson: string) => User;
-  validateJson: (jsonObject: User) => boolean;
+  parseJson: (stringJson: string) => Record<string, unknown>;
+  validateUserPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
+  validateTokenPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
+  validateTokenUpdatePayloadJson: (
+    jsonObject: Record<string, unknown>,
+  ) => boolean;
   validateString: (
     stringToValidate: string | undefined,
     lenOfString: number,
   ) => boolean;
+  validateTokenId: (stringToValidate: string, lenOfString: number) => boolean;
   validateBoolean: (booleanToValidate: boolean) => boolean;
-  encrypt: (text: string) => string;
+  createToken: (length: number) => string;
+  hashPassword: (plainPassword: string) => Promise<string>;
+  verifyPassword: (
+    plainPassword: string,
+    hashedPassword: string,
+  ) => Promise<boolean>;
+  verifyToken: (token: string, phone: string) => Promise<boolean>;
+}
+
+export interface Lib {
+  create: (folderName: string, fileName: string, content: string) => void;
+  update: (folderName: string, fileName: string, content: string) => void;
+  read: (folderName: string, fileName: string) => Promise<string>;
+  delete: (folderName: string, fileName: string) => void;
 }

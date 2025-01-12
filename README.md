@@ -2,11 +2,17 @@
 
 ## Table of Contents
 
-- [How to run](#how-to-run)
-- [Create User](#create-user)
-- [Read User](#read-user)
-- [Update User](#update-user)
-- [Delete User](#delete-user)
+* [How to run](#how-to-run)
+* [REST API to CRUD users](#rest-api-to-crud-users)
+    - [Create User](#create-user)
+    - [Read User](#read-user)
+    - [Update User](#update-user)
+    - [Delete User](#delete-user)
+* [REST API to CRUD tokens](#rest-api-to-crud-tokens)
+    - [Create Token](#create-token)
+    - [Read Token](#read-token)
+    - [Update Token](#update-token)
+    - [Delete Token](#delete-token)
 
 <!-- HOW TO RUN -->
 
@@ -20,7 +26,7 @@ Please follow the below instructions to run this project in your machine:
    ```
 2. Run the app
    ```sh
-   pnpm run dev
+   pnpm run development
    ```
 3. Your app should be available in http://localhost:3000
 
@@ -54,6 +60,12 @@ POST http://localhost:3000/users
 ```
 GET http://localhost:3000/users?phone=01711091061
 ```
+### Headers
+```
+{
+    "token": "your-authentication-token"
+}
+```
 #### Response
 `Status: 400 Bad Request`
 ```
@@ -79,6 +91,12 @@ GET http://localhost:3000/users?phone=01711091061
 ```
 PUT http://localhost:3000/users
 ```
+### Headers
+```
+{
+    "token": "your-authentication-token"
+}
+```
 #### Payload
 ```
 {"firstName": "Muaz", "lastName": "Abdullah", "phone": "01711091062", "password": "abcdefg", "tosAgreement": true }
@@ -102,6 +120,12 @@ PUT http://localhost:3000/users
 ```
 DELETE http://localhost:3000/users?phone=01711091061
 ```
+### Headers
+```
+{
+    "token": "your-authentication-token"
+}
+```
 #### Response
 `Status: 400 Bad Request`
 ```
@@ -114,5 +138,112 @@ DELETE http://localhost:3000/users?phone=01711091061
 ```
 {
     "message": "User deleted"
+}
+```
+## REST API to CRUD tokens
+### Create Token
+#### Request
+```
+POST http://localhost:3000/token
+```
+#### Payload
+```
+{"phone": "01779898372", "password": "12345"}
+```
+#### Response
+`Status: 201 Created`
+```
+{
+    "message": "Token created"
+}
+```
+**Or**
+#### Payload
+```
+{"phone": "0177989837200", "password": "12345"}
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Something went wrong. Please check if the user exists or the token may already exists"
+}
+```
+
+### Read Token
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please provide a valid token."
+}
+```
+**Or**
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb00003
+```
+`Status: 200 OK`
+```
+{
+    "token": {
+        "id": "1ba281e35ce83cb00003",
+        "phone": "01779898372",
+        "expirationTime": 1736657694552
+    }
+}
+```
+### Update Token
+#### Request
+```
+PUT http://localhost:3000/token
+```
+#### Payload
+```
+{"id": "1ba281e35ce83cb", "extend": true}
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please provide a valid token id and extend."
+}
+```
+**Or**
+#### Payload
+```
+{"id": "1ba281e35ce83cb00003", "extend": true}
+```
+`Status: 200 OK`
+```
+{
+    "message": "Token updated."
+}
+```
+### Delete Token
+#### Request
+```
+DELETE http://localhost:3000/token?id=1ba281e35ce83cb
+```
+#### Response
+`Status: 400 Bad Request`
+```
+{
+    "message": "Bad request. Please check the token ID."
+}
+```
+**Or**
+#### Request
+```
+GET http://localhost:3000/token?id=1ba281e35ce83cb00003
+```
+`Status: 200 OK`
+```
+{
+    "message": "Token deleted."
 }
 ```

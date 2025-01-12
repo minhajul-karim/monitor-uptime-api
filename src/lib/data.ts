@@ -1,12 +1,6 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-
-interface Lib {
-  create: (folderName: string, fileName: string, content: string) => Promise<boolean>;
-  update: (folderName: string, fileName: string, content: string) => void;
-  read: (folderName: string, fileName: string) => Promise<string>;
-  delete: (folderName: string, fileName: string) => void;
-}
+import { Lib } from '../helpers/types';
 
 const lib = {} as Lib;
 
@@ -19,10 +13,11 @@ lib.create = async (folderName, fileName, content) => {
   try {
     await fs.writeFile(newFilePath, content, { flag: 'wx' });
     console.log(`${fileName}${EXTENSION} has been created!`);
-    return true;
   } catch (error) {
-    console.error(`Could not create the file ${newFileName}`);
-    return false;
+    console.error(
+      `Could not create the file ${newFileName}. The file may already exist`,
+    );
+    throw error;
   }
 };
 
@@ -33,6 +28,7 @@ lib.read = async (folderName, fileName) => {
     const data = await fs.readFile(filePathToRead, { encoding: 'utf8' });
     return data;
   } catch (error) {
+    console.error(`Couldn't read ${fileNameToRead}`);
     throw error;
   }
 };

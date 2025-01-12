@@ -17,9 +17,10 @@ handler.handleReqRes = function (req, res) {
 
   // Extract data from query string
   const phone = url.searchParams.get('phone');
+  const tokenId = url.searchParams.get('id');
 
-  // Extract custom request headers
-  const token = req.headers['token'];
+  // Extract data from request header
+  const tokenIdFromReqHeader = req.headers["token"];
 
   // Extract payload from request method 1
   /*
@@ -47,9 +48,10 @@ handler.handleReqRes = function (req, res) {
     const requestProps = {
       method: req.method?.toLowerCase(),
       pathname: trimmedPathName,
+      tokenIdFromReqHeader,
       phone,
-      token,
       payload,
+      tokenId,
     };
 
     const chosenRoute =
