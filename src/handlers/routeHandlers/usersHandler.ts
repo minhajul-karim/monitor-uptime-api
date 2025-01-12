@@ -29,8 +29,8 @@ usersHandler.get = async (reqProps, callback) => {
       reqProps.phone,
     );
     if (!tokenVerified) {
-      callback(400, {
-        message: 'Bad request. Please provide a valid token.',
+      callback(403, {
+        message: 'Authentication failed. Please provide a valid token.',
       });
       return;
     }
@@ -81,8 +81,8 @@ usersHandler.put = async (reqProps, callback) => {
       payloadJson.phone as string,
     );
     if (!tokenVerified) {
-      callback(400, {
-        message: 'Bad request. Please provide a valid token.',
+      callback(403, {
+        message: 'Authentication failed. Please provide a valid token.',
       });
       return;
     }
@@ -122,8 +122,8 @@ usersHandler.delete = async (reqProps, callback) => {
       reqProps.phone,
     );
     if (!tokenVerified) {
-      callback(400, {
-        message: 'Bad request. Please provide a valid token.',
+      callback(403, {
+        message: 'Authentication failed. Please provide a valid token.',
       });
       return;
     }
