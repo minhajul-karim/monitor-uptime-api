@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
+import lib from '../lib/data';
 import { Utils } from './types';
 
 const utils = {} as Utils;
@@ -19,19 +20,30 @@ utils.validateUserPayloadJson = (jsonObject) => {
     return false;
   }
 
-  const validatedFirstName = utils.validateString(jsonObject.firstName as string, 2);
+  const validatedFirstName = utils.validateString(
+    jsonObject.firstName as string,
+    2,
+  );
   if (!validatedFirstName) return false;
 
-  const validatedLastName = utils.validateString(jsonObject.lastName as string, 2);
+  const validatedLastName = utils.validateString(
+    jsonObject.lastName as string,
+    2,
+  );
   if (!validatedLastName) return false;
 
   const validatedPhone = utils.validateString(jsonObject.phone as string, 11);
   if (!validatedPhone) return false;
 
-  const validatedPassword = utils.validateString(jsonObject.password as string, 5);
+  const validatedPassword = utils.validateString(
+    jsonObject.password as string,
+    5,
+  );
   if (!validatedPassword) return false;
 
-  const validatedTosAgreement = utils.validateBoolean(jsonObject.tosAgreement as boolean);
+  const validatedTosAgreement = utils.validateBoolean(
+    jsonObject.tosAgreement as boolean,
+  );
   if (!validatedTosAgreement) return false;
 
   return true;
@@ -45,7 +57,10 @@ utils.validateTokenPayloadJson = (jsonObject) => {
   const validatedPhone = utils.validateString(jsonObject.phone as string, 11);
   if (!validatedPhone) return false;
 
-  const validatedPassword = utils.validateString(jsonObject.password as string, 5);
+  const validatedPassword = utils.validateString(
+    jsonObject.password as string,
+    5,
+  );
   if (!validatedPassword) return false;
 
   return true;
@@ -109,6 +124,23 @@ utils.createToken = (length) => {
   const numberOfBytes = Math.floor(length / 2);
   const token = crypto.randomBytes(numberOfBytes).toString('hex');
   return token;
+};
+
+utils.verifyToken = async (tokenId, phone) => {
+  const validatedTokenId = utils.validateTokenId(tokenId, 20);
+  if (!validatedTokenId) return false;
+
+  try {
+    const tokenString = await lib.read('tokens', tokenId);
+    const token = utils.parseJson(tokenString);
+    if (token.phone !== phone) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(`Couldn't read the file ${tokenId}`);
+    return false;
+  }
 };
 
 export default utils;

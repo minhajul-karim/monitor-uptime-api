@@ -10,6 +10,7 @@ interface RequestProps {
   phone: string;
   payload: string;
   tokenId: string;
+  tokenIdFromReqHeader: undefined | string;
 }
 
 type HandleReqRes = (
@@ -36,10 +37,7 @@ export interface Utils {
     stringToValidate: string | undefined,
     lenOfString: number,
   ) => boolean;
-  validateTokenId: (
-    stringToValidate: string,
-    lenOfString: number,
-  ) => boolean;
+  validateTokenId: (stringToValidate: string, lenOfString: number) => boolean;
   validateBoolean: (booleanToValidate: boolean) => boolean;
   createToken: (length: number) => string;
   hashPassword: (plainPassword: string) => Promise<string>;
@@ -47,6 +45,7 @@ export interface Utils {
     plainPassword: string,
     hashedPassword: string,
   ) => Promise<boolean>;
+  verifyToken: (token: string, phone: string) => Promise<boolean>;
 }
 
 export interface Lib {
