@@ -143,7 +143,7 @@ utils.validateBoolean = (booleanToValidate) => {
 };
 
 utils.validateStringInArray = (str, arr) => {
-  if (typeof str === 'string' && arr.includes(str)) {
+  if (typeof str === 'string' && arr.includes(str.toLocaleLowerCase())) {
     return true;
   }
   return false;
