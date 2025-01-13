@@ -2,6 +2,7 @@ export interface UserResponse {
   message?: string;
   user?: Record<string, unknown>;
   token?: Record<string, unknown>;
+  check?: Record<string, unknown>;
 }
 
 interface RequestProps {

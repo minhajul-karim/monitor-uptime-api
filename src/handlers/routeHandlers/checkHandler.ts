@@ -41,7 +41,24 @@ checkHandler.handleReqRes = async (reqProps, callback) => {
   checkHandler[method](reqProps, callback);
 };
 
-checkHandler.get = async (reqProps, callback) => {};
+checkHandler.get = async (reqProps, callback) => {
+  const { tokenId: checkId } = reqProps;
+  const validatedCheckId = utils.validateString(checkId, 10);
+  if (!validatedCheckId) {
+    callback(400, {
+      message: 'Bad request. Please provide a valid check id.',
+    });
+    return;
+  }
+
+  try {
+    const checkString = await lib.read('checks', checkId);
+    const checkJson = utils.parseJson(checkString);
+    callback(200, { check: checkJson });
+  } catch (error) {
+    callback(400, { message: 'Something went wrong. Could not find user' });
+  }
+};
 
 checkHandler.post = async (reqProps, callback) => {
   const payloadJson = utils.parseJson(reqProps.payload);
@@ -63,8 +80,12 @@ checkHandler.post = async (reqProps, callback) => {
   }
 
   // Create check file
-  const checkId = utils.createToken(5);
-  await lib.create('checks', checkId, JSON.stringify(payloadJson));
+  const checkId = utils.createToken(10);
+  const checkObject = {
+    id: checkId,
+    ...payloadJson,
+  };
+  await lib.create('checks', checkId, JSON.stringify(checkObject));
 
   // Update check ids to the user
   if (currentCheckCount === 0) {
