@@ -101,4 +101,40 @@ checkHandler.post = async (reqProps, callback) => {
 
 checkHandler.put = async (reqProps, callback) => {};
 
-checkHandler.delete = async (reqProps, callback) => {};
+checkHandler.delete = async (reqProps, callback) => {
+  const { tokenId: checkId } = reqProps;
+  const validatedCheckId = utils.validateString(checkId, 10);
+  if (!validatedCheckId) {
+    callback(400, {
+      message: 'Bad request. Please provide a valid check id.',
+    });
+    return;
+  }
+
+  try {
+    // Remove the check file
+    await lib.delete('checks', checkId);
+    const userString = await lib.read('users', reqProps.phone);
+
+    // Remove the check id from user
+    const userJson = utils.parseJson(userString);
+    const currentChecks = userJson.checks as string[];
+    const updatedChecks = currentChecks.filter(
+      (check: string) => check !== checkId,
+    );
+
+    if (currentChecks.length === updatedChecks.length) {
+      callback(400, {
+        message: 'Something went wrong. Could not find check id inside user.',
+      });
+      return;
+    }
+
+    // Update user
+    userJson.checks = updatedChecks;
+    await lib.update('users', reqProps.phone, JSON.stringify(userJson));
+    callback(200, { message: 'Check deleted.' });
+  } catch (error) {
+    callback(400, { message: 'Something went wrong. Could not find user' });
+  }
+};
