@@ -194,4 +194,11 @@ utils.verifyToken = async (tokenId, phone) => {
   }
 };
 
+utils.getChecksCount = (checksCount) => {
+  if (checksCount && checksCount instanceof Array && checksCount.length > 0) {
+    return checksCount.length;
+  }
+  return 0;
+}
+
 export default utils;

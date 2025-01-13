@@ -49,6 +49,7 @@ export interface Utils {
   verifyToken: (token: string, phone: string) => Promise<boolean>;
   validateStringInArray: (str: string, arr: string[]) => boolean;
   validateTimeOutSeconds: (timeout: number) => boolean;
+  getChecksCount: (checksCount: string[]) => number;
 }
 
 export interface Lib {
