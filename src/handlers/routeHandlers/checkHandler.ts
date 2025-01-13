@@ -99,7 +99,23 @@ checkHandler.post = async (reqProps, callback) => {
   callback(201, { message: 'Check ceated.' });
 };
 
-checkHandler.put = async (reqProps, callback) => {};
+checkHandler.put = async (reqProps, callback) => {
+  const payloadJson = utils.parseJson(reqProps.payload);
+  const validatedPayloadJson = utils.validateCheckPayloadJson(payloadJson);
+  const validatedCheckId = utils.validateString(payloadJson.id as string, 10);
+  if (!validatedPayloadJson || !validatedCheckId) {
+    callback(400, { message: 'Bad request. Please provide a valid payload.' });
+    return;
+  }
+
+  // Update the check file
+  await lib.update(
+    'checks',
+    payloadJson.id as string,
+    JSON.stringify(payloadJson),
+  );
+  callback(200, { message: 'Check updated.' });
+};
 
 checkHandler.delete = async (reqProps, callback) => {
   const { tokenId: checkId } = reqProps;
