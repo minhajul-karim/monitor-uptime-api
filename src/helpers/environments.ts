@@ -1,29 +1,23 @@
-interface Env {
-  port: number;
-  envName: string;
-}
-
-interface Environments {
-  development: Env;
-  staging: Env;
-  production: Env;
-}
+import { Environments } from './types';
 
 const environments = {} as Environments;
 
 environments.development = {
   port: 3000,
   envName: 'development',
+  maxCheckTimeoutSeconds: 5,
 };
 
 environments.staging = {
   port: 4000,
   envName: 'staging',
+  maxCheckTimeoutSeconds: 5,
 };
 
 environments.production = {
   port: 5000,
   envName: 'production',
+  maxCheckTimeoutSeconds: 5,
 };
 
 const currentEnvironmentName =

@@ -2,6 +2,7 @@ export interface UserResponse {
   message?: string;
   user?: Record<string, unknown>;
   token?: Record<string, unknown>;
+  check?: Record<string, unknown>;
 }
 
 interface RequestProps {
@@ -29,6 +30,7 @@ export interface UserHandler {
 export interface Utils {
   parseJson: (stringJson: string) => Record<string, unknown>;
   validateUserPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
+  validateCheckPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
   validateTokenPayloadJson: (jsonObject: Record<string, unknown>) => boolean;
   validateTokenUpdatePayloadJson: (
     jsonObject: Record<string, unknown>,
@@ -46,6 +48,9 @@ export interface Utils {
     hashedPassword: string,
   ) => Promise<boolean>;
   verifyToken: (token: string, phone: string) => Promise<boolean>;
+  validateStringInArray: (str: string, arr: string[]) => boolean;
+  validateTimeOutSeconds: (timeout: number) => boolean;
+  getChecksCount: (checksCount: string[]) => number;
 }
 
 export interface Lib {
@@ -53,4 +58,16 @@ export interface Lib {
   update: (folderName: string, fileName: string, content: string) => void;
   read: (folderName: string, fileName: string) => Promise<string>;
   delete: (folderName: string, fileName: string) => void;
+}
+
+interface Env {
+  port: number;
+  envName: string;
+  maxCheckTimeoutSeconds: number;
+}
+
+export interface Environments {
+  development: Env;
+  staging: Env;
+  production: Env;
 }

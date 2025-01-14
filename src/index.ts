@@ -1,7 +1,6 @@
 import * as http from 'http';
 import { handler } from './helpers/handleReqRes';
 import { environmentToExport as environment } from './helpers/environments';
-import lib from './lib/data';
 
 // Define the App interface
 interface App {

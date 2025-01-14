@@ -13,6 +13,11 @@
     - [Read Token](#read-token)
     - [Update Token](#update-token)
     - [Delete Token](#delete-token)
+* [REST API to CRUD checks](#rest-api-to-crud-checks)
+    - [Cerate Check](#create-check)
+    - [Read Check](#read-check)
+    - [Update Check](#update-check)
+    - [Delete Check](#delete-check)
 
 <!-- HOW TO RUN -->
 
@@ -245,5 +250,95 @@ GET http://localhost:3000/token?id=1ba281e35ce83cb00003
 ```
 {
     "message": "Token deleted."
+}
+```
+============
+============
+## REST API to CRUD checks
+### Create Check
+#### Request
+```
+POST http://localhost:3000/check
+```
+### Header
+```
+{ token: your-token }
+```
+#### Payload
+```
+{
+    "protocol": "http",
+    "url": "facebook.com",
+    "method": "get",
+    "successCodes": [200],
+    "timeoutSeconds": 4
+}
+```
+#### Response
+`Status: 201 Created`
+```
+{
+    "message": "Check ceated."
+}
+```
+### Read Check
+#### Request
+```
+GET http://localhost:3000/check?id=a6d8ecb143
+```
+### Header
+```
+{ token: your-token }
+```
+#### Response
+`Status: 200 OK`
+```
+{
+    "check": {
+        "id": "a6d8ecb143",
+        "protocol": "http",
+        "url": "facebook.com",
+        "method": "get",
+        "successCodes": [
+            200
+        ],
+        "timeoutSeconds": 4
+    }
+}
+```
+### Update Check
+#### Request
+```
+PUT http://localhost:3000/check
+```
+#### Payload
+```
+{
+    "id": "a6d8ecb143",
+    "protocol": "https",
+    "url": "booble.com",
+    "method": "put",
+    "successCodes": [301, 201],
+    "timeoutSeconds": 5
+}
+```
+**At this moment, the maximum value of timeoutSeconds can be 5.**
+#### Response
+`Status: 200 OK`
+```
+{
+    "message": "Check updated."
+}
+```
+### Delete Check
+#### Request
+```
+DELETE http://localhost:3000/check?id=a6d8ecb143
+```
+#### Response
+`Status: 200 OK`
+```
+{
+    "message": "Check deleted."
 }
 ```
