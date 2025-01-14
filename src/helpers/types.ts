@@ -14,10 +14,9 @@ interface RequestProps {
   tokenIdFromReqHeader: undefined | string;
 }
 
-type HandleReqRes = (
-  reqProps: RequestProps,
-  callback: (statusCode: number, response: UserResponse) => void,
-) => void;
+type Callback = (statusCode: number, response: UserResponse) => void;
+
+type HandleReqRes = (reqProps: RequestProps, callback: Callback) => void;
 
 export interface UserHandler {
   handleReqRes: HandleReqRes;
@@ -70,4 +69,12 @@ export interface Environments {
   development: Env;
   staging: Env;
   production: Env;
+}
+
+export interface Messages {
+  sendMessage: (
+    toPhoneNumber: string,
+    message: string,
+    callback: (status: string | number) => void,
+  ) => void;
 }
