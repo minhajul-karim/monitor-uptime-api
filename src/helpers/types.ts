@@ -57,6 +57,7 @@ export interface Lib {
   update: (folderName: string, fileName: string, content: string) => void;
   read: (folderName: string, fileName: string) => Promise<string>;
   delete: (folderName: string, fileName: string) => void;
+  getFileNames: (folderName: string) => Promise<string[]>;
 }
 
 interface Env {

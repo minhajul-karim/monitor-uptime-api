@@ -59,4 +59,18 @@ lib.delete = async (folderName, fileName) => {
   }
 };
 
+lib.getFileNames = async (folderName) => {
+  const pathToFolderName = `${filePath}/${folderName}`;
+  try {
+    const fileNames = await fs.readdir(pathToFolderName);
+    const fileNamesWithoutExt = fileNames.map((fileName) =>
+      fileName.replace('.txt', ''),
+    );
+    return fileNamesWithoutExt;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export default lib;
