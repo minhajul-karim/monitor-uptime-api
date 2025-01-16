@@ -5,7 +5,7 @@ const environments = {} as Environments;
 environments.development = {
   port: 3000,
   envName: 'development',
-  maxCheckTimeoutSeconds: 5,
+  maxCheckTimeoutSeconds: 10,
 };
 
 environments.staging = {
@@ -17,7 +17,7 @@ environments.staging = {
 environments.production = {
   port: 5000,
   envName: 'production',
-  maxCheckTimeoutSeconds: 5,
+  maxCheckTimeoutSeconds: 10,
 };
 
 const currentEnvironmentName =

@@ -96,7 +96,7 @@ checkHandler.post = async (reqProps, callback) => {
   }
 
   await lib.update('users', reqProps.phone, JSON.stringify(userJson));
-  callback(201, { message: 'Check ceated.' });
+  callback(201, { check: checkObject });
 };
 
 checkHandler.put = async (reqProps, callback) => {
@@ -114,7 +114,7 @@ checkHandler.put = async (reqProps, callback) => {
     payloadJson.id as string,
     JSON.stringify(payloadJson),
   );
-  callback(200, { message: 'Check updated.' });
+  callback(200, { check: payloadJson });
 };
 
 checkHandler.delete = async (reqProps, callback) => {
