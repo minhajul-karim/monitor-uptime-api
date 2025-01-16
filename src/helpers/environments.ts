@@ -11,7 +11,7 @@ environments.development = {
 environments.staging = {
   port: 4000,
   envName: 'staging',
-  maxCheckTimeoutSeconds: 5,
+  maxCheckTimeoutSeconds: 10,
 };
 
 environments.production = {
