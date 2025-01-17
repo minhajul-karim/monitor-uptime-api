@@ -186,6 +186,12 @@ utils.verifyToken = async (tokenId, phone) => {
   try {
     const tokenString = await lib.read('tokens', tokenId);
     const token = utils.parseJson(tokenString);
+    const tokenExpirationTime = token.expirationTime as number;
+
+    if (Date.now() > tokenExpirationTime) {
+      return false;
+    }
+
     if (token.phone !== phone) {
       return false;
     }
