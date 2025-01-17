@@ -121,7 +121,7 @@ worker.processCheckResult = async (checkJson, checkResult) => {
       messages.sendMessage(checkJson.phone as string, message, (resCode) => {
         console.log(
           resCode === 'queued'
-            ? `Sms sent to ${checkJson.phone}`
+            ? `${message} - This sms has been sent to ${checkJson.phone}`
             : `Something went wrong while sending sms to ${checkJson.phone}`,
         );
       });

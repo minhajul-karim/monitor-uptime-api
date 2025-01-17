@@ -5,7 +5,7 @@ import { Lib } from '../helpers/types';
 const lib = {} as Lib;
 
 const filePath = path.join(__dirname, '../../.data');
-const EXTENSION = '.txt';
+const EXTENSION = '.json';
 
 lib.create = async (folderName, fileName, content) => {
   const newFileName = `${fileName}${EXTENSION}`;
@@ -64,7 +64,7 @@ lib.getFileNames = async (folderName) => {
   try {
     const fileNames = await fs.readdir(pathToFolderName);
     const fileNamesWithoutExt = fileNames.map((fileName) =>
-      fileName.replace('.txt', ''),
+      fileName.replace('.json', ''),
     );
     return fileNamesWithoutExt;
   } catch (error) {
