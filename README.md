@@ -261,8 +261,6 @@ GET http://localhost:3000/token?id=1ba281e35ce83cb00003
     "message": "Token deleted."
 }
 ```
-============
-============
 ## REST API to CRUD checks
 ### Create Check
 #### Request
