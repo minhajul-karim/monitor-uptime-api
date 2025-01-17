@@ -1,22 +1,16 @@
-import * as http from 'http';
-import { handler } from './helpers/handleReqRes';
-import { environmentToExport as environment } from './helpers/environments';
+import server from './lib/server';
+import worker from './lib/worker';
 
 // Define the App interface
 interface App {
-  createServer: () => void;
-  handleReqRes: (req: http.IncomingMessage, res: http.ServerResponse) => void;
+  init: () => void;
 }
 
 const app: App = {} as App;
 
-app.createServer = function () {
-  const server = http.createServer(app.handleReqRes);
-  server.listen(environment.port, () => {
-    console.log(`Listening at port ${environment.port}`);
-  });
+app.init = () => {
+  server.init();
+  worker.init();
 };
 
-app.handleReqRes = handler.handleReqRes;
-
-app.createServer();
+app.init();

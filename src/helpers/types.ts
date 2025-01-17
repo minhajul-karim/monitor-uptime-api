@@ -14,10 +14,9 @@ interface RequestProps {
   tokenIdFromReqHeader: undefined | string;
 }
 
-type HandleReqRes = (
-  reqProps: RequestProps,
-  callback: (statusCode: number, response: UserResponse) => void,
-) => void;
+type Callback = (statusCode: number, response: UserResponse) => void;
+
+type HandleReqRes = (reqProps: RequestProps, callback: Callback) => void;
 
 export interface UserHandler {
   handleReqRes: HandleReqRes;
@@ -58,6 +57,7 @@ export interface Lib {
   update: (folderName: string, fileName: string, content: string) => void;
   read: (folderName: string, fileName: string) => Promise<string>;
   delete: (folderName: string, fileName: string) => void;
+  getFileNames: (folderName: string) => Promise<string[]>;
 }
 
 interface Env {
@@ -70,4 +70,31 @@ export interface Environments {
   development: Env;
   staging: Env;
   production: Env;
+}
+
+export interface Messages {
+  sendMessage: (
+    toPhoneNumber: string,
+    message: string,
+    callback: (status: string | number) => void,
+  ) => void;
+}
+
+export interface Worker {
+  gatherAllChecks: () => void;
+  loop: () => void;
+  init: () => void;
+  performCheck: (checkJson: Record<string, unknown>) => void;
+  validateCheckStatusAndLastCheckedTime: (
+    checkJson: Record<string, unknown>,
+  ) => void;
+  validateCheckStatus: (checkStatus: string) => string;
+  validateLastCheckedTime: (lastCheckedTime: number) => number;
+  processCheckResult: (
+    checkJson: Record<string, unknown>,
+    checkResult: {
+      error: boolean;
+      statusCode: number;
+    },
+  ) => void;
 }

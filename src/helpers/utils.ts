@@ -54,6 +54,8 @@ utils.validateCheckPayloadJson = (jsonObject) => {
   if (typeof jsonObject !== 'object') {
     return false;
   }
+  const validatedPhone = utils.validateString(jsonObject.phone as string, 11);
+  if (!validatedPhone) return false;
 
   const validatedProtocol = utils.validateStringInArray(
     jsonObject.protocol as string,
@@ -199,6 +201,6 @@ utils.getChecksCount = (checksCount) => {
     return checksCount.length;
   }
   return 0;
-}
+};
 
 export default utils;
