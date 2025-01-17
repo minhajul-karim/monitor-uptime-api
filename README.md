@@ -1,7 +1,13 @@
 # Monitor Website uptime
+This API enables users to manage and monitor website or service availability through the following features:
+
+- **CRUD Users:** Create, read, update, and delete user information.
+- **CRUD Tokens:** Manage authentication tokens for secure API access.
+- **CRUD Checks:** Configure monitoring checks for specific URLs with custom settings.
 
 ## Table of Contents
 
+* [How it works](#how-it-works)
 * [How to run](#how-to-run)
 * [REST API to CRUD users](#rest-api-to-crud-users)
     - [Create User](#create-user)
@@ -19,7 +25,10 @@
     - [Update Check](#update-check)
     - [Delete Check](#delete-check)
 
-<!-- HOW TO RUN -->
+## How it works
+Checks are JSON files containing monitoring details such as URL, protocol, HTTP method, success status codes, timeout, and status. The system reads these checks every minute, makes network requests to the specified URLs, and evaluates responses against the defined success codes. It updates the status (`up` or `down`) in the check file and sends SMS notifications via Twilio when the status changes (e.g., from `up` to `down` or vice versa).
+
+This ensures real-time monitoring and alerting for critical services.
 
 ## How to run
 

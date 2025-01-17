@@ -66,7 +66,7 @@ tokenHandler.post = async (reqProps, callback) => {
 
     // Create token
     await lib.create('tokens', token.id, JSON.stringify(token));
-    callback(201, { message: 'Token created.' });
+    callback(201, { token });
   } catch (error) {
     callback(400, {
       message:
@@ -104,7 +104,7 @@ tokenHandler.put = async (reqProps, callback) => {
       payloadJson.id as string,
       JSON.stringify(tokenJson),
     );
-    callback(200, { message: 'Token updated.' });
+    callback(200, { token: tokenJson });
   } catch (error) {
     callback(400, { message: 'Bad request.' });
   }
