@@ -79,3 +79,22 @@ export interface Messages {
     callback: (status: string | number) => void,
   ) => void;
 }
+
+export interface Worker {
+  gatherAllChecks: () => void;
+  loop: () => void;
+  init: () => void;
+  performCheck: (checkJson: Record<string, unknown>) => void;
+  validateCheckStatusAndLastCheckedTime: (
+    checkJson: Record<string, unknown>,
+  ) => void;
+  validateCheckStatus: (checkStatus: string) => string;
+  validateLastCheckedTime: (lastCheckedTime: number) => number;
+  processCheckResult: (
+    checkJson: Record<string, unknown>,
+    checkResult: {
+      error: boolean;
+      statusCode: number;
+    },
+  ) => void;
+}

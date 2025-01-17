@@ -1,15 +1,9 @@
 import lib from './data';
-import url from 'url';
 import utils from '../helpers/utils';
 import http from 'http';
 import https from 'https';
-
-interface Worker {
-  gatherAllChecks: () => void;
-  loop: () => void;
-  init: () => void;
-  performCheck: (checkJson: Record<string, unknown>) => void;
-}
+import { Worker } from '../helpers/types';
+import messages from '../helpers/messages';
 
 const worker = {} as Worker;
 
@@ -19,8 +13,30 @@ worker.gatherAllChecks = async () => {
   for (const fileName of listOfCheckFiles) {
     const checkContentStr = await lib.read('checks', fileName);
     const checkJson = utils.parseJson(checkContentStr);
-    worker.performCheck(checkJson);
+    worker.validateCheckStatusAndLastCheckedTime(checkJson);
   }
+};
+
+worker.validateCheckStatusAndLastCheckedTime = (checkJson) => {
+  const checkStatus = checkJson.status as string;
+  const lastCheckedTime = checkJson.lastCheckedTime as number;
+  checkJson.status = worker.validateCheckStatus(checkStatus);
+  checkJson.lastCheckedTime = worker.validateLastCheckedTime(lastCheckedTime);
+  worker.performCheck(checkJson);
+};
+
+worker.validateCheckStatus = (checkStatus) => {
+  if (typeof checkStatus === 'string' && ['up', 'down'].includes(checkStatus)) {
+    return checkStatus;
+  }
+  return 'down';
+};
+
+worker.validateLastCheckedTime = (lastCheckedTime) => {
+  if (typeof lastCheckedTime === 'number' && lastCheckedTime > 0) {
+    return lastCheckedTime;
+  }
+  return 0;
 };
 
 worker.performCheck = (checkJson) => {
@@ -51,8 +67,7 @@ worker.performCheck = (checkJson) => {
         checkResult.error = false;
         checkResult.statusCode = response.statusCode ?? 0;
         checkResultSent = true;
-        console.log('SUCCESS!');
-        // TODO: Call a method to process check result(checkjson, checkresult)
+        worker.processCheckResult(checkJson, checkResult);
       }
     });
   });
@@ -60,6 +75,7 @@ worker.performCheck = (checkJson) => {
   request.on('error', (error) => {
     console.error(error);
     if (!checkResultSent) {
+      checkResultSent = true;
       checkResult.error = true;
       checkResult.statusCode = 0;
     }
@@ -68,12 +84,51 @@ worker.performCheck = (checkJson) => {
   request.on('timeout', () => {
     console.error(`Request timeout for ${requestOptions.hostname}`);
     if (!checkResultSent) {
+      checkResultSent = true;
       checkResult.error = true;
       checkResult.statusCode = 0;
     }
   });
 
   request.end();
+};
+
+worker.processCheckResult = async (checkJson, checkResult) => {
+  const successCodes = checkJson.successCodes as number[];
+  const updatedStatus =
+    !checkResult.error && successCodes.includes(checkResult.statusCode)
+      ? 'up'
+      : 'down';
+
+  // Send sms if the status has altered, up to down or down to up
+  const currentStatus = checkJson.status;
+  const lastCheckedTime = checkJson.lastCheckedTime as number;
+
+  // Add status and lastCheckedTime to the check
+  checkJson.status = updatedStatus;
+  checkJson.lastCheckedTime = Date.now();
+
+  try {
+    await lib.update(
+      'checks',
+      checkJson.id as string,
+      JSON.stringify(checkJson),
+    );
+    const shouldSendSms =
+      lastCheckedTime > 0 && currentStatus !== checkJson.status;
+    if (shouldSendSms) {
+      const message = `${checkJson.protocol}://${checkJson.url} is now ${checkJson.status}`;
+      messages.sendMessage(checkJson.phone as string, message, (resCode) => {
+        console.log(
+          resCode === 'queued'
+            ? `Sms sent to ${checkJson.phone}`
+            : `Something went wrong while sending sms to ${checkJson.phone}`,
+        );
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 worker.loop = () => {
