@@ -64,9 +64,9 @@ worker.performCheck = (checkJson) => {
 
     response.on('end', () => {
       if (!checkResultSent) {
+        checkResultSent = true;
         checkResult.error = false;
         checkResult.statusCode = response.statusCode ?? 0;
-        checkResultSent = true;
         worker.processCheckResult(checkJson, checkResult);
       }
     });
@@ -78,6 +78,7 @@ worker.performCheck = (checkJson) => {
       checkResultSent = true;
       checkResult.error = true;
       checkResult.statusCode = 0;
+      worker.processCheckResult(checkJson, checkResult);
     }
   });
 
@@ -87,6 +88,7 @@ worker.performCheck = (checkJson) => {
       checkResultSent = true;
       checkResult.error = true;
       checkResult.statusCode = 0;
+      worker.processCheckResult(checkJson, checkResult);
     }
   });
 
